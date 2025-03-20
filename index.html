@@ -160,25 +160,61 @@
             const justdialChecked = document.querySelector('input[name="justdialStars"]:checked');
             document.getElementById('submitBtn').disabled = !(googleChecked && justdialChecked);
         }
-
+    
         document.querySelectorAll('input[name="googleStars"], input[name="justdialStars"]').forEach(input => {
             input.addEventListener('change', validateRatings);
         });
-
+    
         document.getElementById('submitBtn').addEventListener('click', function() {
-            // Hide the feedback form
+            // Collect the ratings
+            const googleRating = document.querySelector('input[name="googleStars"]:checked').value;
+            const justdialRating = document.querySelector('input[name="justdialStars"]:checked').value;
+    
+            // Collect the comments
+            const googleComment = document.querySelector('.comment-box:nth-of-type(1)').value;
+            const justdialComment = document.querySelector('.comment-box:nth-of-type(2)').value;
+    
+            // Store data (for now, just logging in console, but it should be sent to the server)
+            console.log("Google Rating:", googleRating, "Comment:", googleComment);
+            console.log("Justdial Rating:", justdialRating, "Comment:", justdialComment);
+    
+            // Send the data to a backend (Optional: if you have a server)
+            fetch("https://your-backend-api.com/submit-rating", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    googleRating: googleRating,
+                    googleComment: googleComment,
+                    justdialRating: justdialRating,
+                    justdialComment: justdialComment
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Data stored successfully:", data);
+            })
+            .catch(error => {
+                console.error("Error storing data:", error);
+            });
+    
+            // Hide feedback form
             document.getElementById('feedbackForm').style.display = 'none';
-
+    
             // Show thank you message
             document.getElementById('thankYouMessage').style.display = 'block';
-
-            // Open Google & Justdial review links in new tabs
-            window.open("https://g.page/r/Celzrcrr0HUoEBM/review", "_blank");
+    
+            // Redirect to Google & Justdial review pages after 2 seconds
             setTimeout(() => {
-                window.open("https://jsdl.in/RSL-IXE1742469116", "_blank");
-            }, 1000);
+                window.open("https://g.page/r/Celzrcrr0HUoEBM/review", "_blank");
+                setTimeout(() => {
+                    window.open("https://jsdl.in/RSL-IXE1742469116", "_blank");
+                }, 1000);
+            }, 2000);
         });
     </script>
+    
 
 </body>
 </html>
